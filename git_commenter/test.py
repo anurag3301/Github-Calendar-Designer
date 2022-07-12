@@ -1,4 +1,5 @@
 import pygame
+import datetime
  
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -8,13 +9,13 @@ RED = (255, 0, 0)
 WIDTH = 20
 HEIGHT = 20
 ROWS = 7
-COLS = 52
+COLS = 53
  
 MARGIN = 5
 grid = []
-for row in range(ROWS):
+for row in range(COLS):
     grid.append([])
-    for column in range(COLS):
+    for column in range(ROWS):
         grid[row].append(False)  # Append a cell
  
 pygame.init()
@@ -27,7 +28,19 @@ pygame.display.set_caption("Array Backed Grid")
 done = False
  
 clock = pygame.time.Clock()
+
+year = 2019
+fday = datetime.datetime(year, 1, 1).weekday()
+lday = datetime.datetime(year, 12, 31).weekday()
+if(fday!=6):
+    for i in range(fday+1):
+        grid[0][i] = None
  
+if(lday!=5):
+    lday = -1 if lday == 6 else lday
+    for i in range(lday+2, 7):
+        grid[-1][i] = None
+
 # -------- Main Program Loop -----------
 while not done:
     for event in pygame.event.get():
@@ -37,20 +50,22 @@ while not done:
             pos = pygame.mouse.get_pos()
             column = pos[0] // (WIDTH + MARGIN)
             row = pos[1] // (HEIGHT + MARGIN)
-            grid[row][column] = not grid[row][column]
-            print("Click ", pos, "Grid coordinates: ", row, column)
+            if(grid[column][row]!=None):
+                grid[column][row] = not grid[column][row]
  
     screen.fill(BLACK)
  
-    for row in range(ROWS):
-        for column in range(COLS):
+    for row in range(COLS):
+        for column in range(ROWS):
             color = WHITE
             if grid[row][column] == True:
                 color = GREEN
+            if grid[row][column] == None:
+                color = BLACK
             pygame.draw.rect(screen,
                              color,
-                             [(MARGIN + WIDTH) * column + MARGIN,
-                              (MARGIN + HEIGHT) * row + MARGIN,
+                             [(MARGIN + WIDTH) * row + MARGIN,
+                              (MARGIN + HEIGHT) * column + MARGIN,
                               WIDTH,
                               HEIGHT])
  
