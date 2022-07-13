@@ -2,6 +2,7 @@ import pygame
 import datetime
 import pickle
 from dateutil.relativedelta import relativedelta
+import sys
  
 WINDOW_SIZE = [1400, 255]
 BLACK = (0, 0, 0)
@@ -41,7 +42,16 @@ def grid_screen_init(year):
     screen = pygame.display.set_mode(WINDOW_SIZE)
     done = False
     clock = pygame.time.Clock()
-    grid = grid_creator(year)
+    
+    if 'old' in sys.argv:
+        try:
+            with open(f'{year}.pkl', 'rb') as f:
+                grid = pickle.load(f)
+        except FileNotFoundError:
+            grid = grid_creator(year)
+    else:
+        grid = grid_creator(year)
+
 
     while not done:
         for event in pygame.event.get():
@@ -77,15 +87,14 @@ def grid_screen_init(year):
         pygame.display.flip()
 
     pygame.quit()
+
+    with open(f'{year}.pkl', 'wb') as f:
+        pickle.dump(grid, f)
+
     return grid
 
 def get_dates(year):
     grid = grid_screen_init(year)
-    with open('gridat.pkl', 'wb') as f:
-        pickle.dump(grid, f)
-
-    with open('gridat.pkl', 'rb') as f:
-        grid = pickle.load(f)
 
     fday = datetime.datetime(year, 1, 1).weekday()
     fday = -1 if fday == 6 else fday
