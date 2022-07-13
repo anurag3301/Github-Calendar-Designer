@@ -1,5 +1,7 @@
 import pygame
 import datetime
+import pickle
+from dateutil.relativedelta import relativedelta
  
 WINDOW_SIZE = [1400, 255]
 BLACK = (0, 0, 0)
@@ -35,11 +37,11 @@ def grid_creator(year):
     return grid
 
     
-def grid_screen_init(): 
+def grid_screen_init(year): 
     screen = pygame.display.set_mode(WINDOW_SIZE)
     done = False
     clock = pygame.time.Clock()
-    grid = grid_creator(2019)
+    grid = grid_creator(year)
 
     while not done:
         for event in pygame.event.get():
@@ -78,5 +80,21 @@ def grid_screen_init():
     return grid
 
 if __name__=="__main__":
-    grid = grid_screen_init()
-    print(grid)
+    year = 2019
+    # grid = grid_screen_init(year)
+    # with open('gridat.pkl', 'wb') as f:
+    #     pickle.dump(grid, f)
+
+    with open('gridat.pkl', 'rb') as f:
+        grid = pickle.load(f)
+
+    fday = datetime.datetime(year, 1, 1).weekday()
+    fday = -1 if fday == 6 else fday
+
+    for i in range(COLS):
+        for j in range(ROWS):
+            if grid[i][j]==True:
+                date = datetime.date(year, 1, 1) + relativedelta(weeks=+i, days=+(j-fday-1))
+                print(date)
+    
+
