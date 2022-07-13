@@ -79,11 +79,10 @@ def grid_screen_init(year):
     pygame.quit()
     return grid
 
-if __name__=="__main__":
-    year = 2019
-    # grid = grid_screen_init(year)
-    # with open('gridat.pkl', 'wb') as f:
-    #     pickle.dump(grid, f)
+def get_dates(year):
+    grid = grid_screen_init(year)
+    with open('gridat.pkl', 'wb') as f:
+        pickle.dump(grid, f)
 
     with open('gridat.pkl', 'rb') as f:
         grid = pickle.load(f)
@@ -91,10 +90,16 @@ if __name__=="__main__":
     fday = datetime.datetime(year, 1, 1).weekday()
     fday = -1 if fday == 6 else fday
 
+    dates_list=[]
+
     for i in range(COLS):
         for j in range(ROWS):
             if grid[i][j]==True:
                 date = datetime.date(year, 1, 1) + relativedelta(weeks=+i, days=+(j-fday-1))
-                print(date)
-    
+                dates_list.append(date)
 
+    return dates_list
+
+if __name__=="__main__":
+    year = 2019
+    print(get_dates(year))
