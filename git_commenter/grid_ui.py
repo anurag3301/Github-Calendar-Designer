@@ -20,8 +20,17 @@ BTN_FG = (200, 200, 200)
 
 pygame.init()
 
-def grid_creator(year):
+def grid_creator(year, old=False):
     grid = []
+
+    if old:
+        try:
+            with open(f'{year}.pkl', 'rb') as f:
+                grid = pickle.load(f)
+            return grid
+        except FileNotFoundError:
+            pass
+
     for row in range(COLS):
         grid.append([])
         for column in range(ROWS):
@@ -46,14 +55,7 @@ def grid_screen_init(year):
     done = False
     clock = pygame.time.Clock()
     
-    if 'old' in sys.argv:
-        try:
-            with open(f'{year}.pkl', 'rb') as f:
-                grid = pickle.load(f)
-        except FileNotFoundError:
-            grid = grid_creator(year)
-    else:
-        grid = grid_creator(year)
+    grid = grid_creator(year)
 
     old_button = utils.button(BTN_BG, BTN_FG, 400, 195, 70, 40, ' Old ')
     save_button = utils.button(BTN_BG, BTN_FG, 570, 195, 220, 40, ' Save And Exit ')
@@ -69,6 +71,8 @@ def grid_screen_init(year):
 
                 if old_button.isOver(pos):
                     print("Old button clicked")
+                    grid = grid_creator(year, old=True)
+
                 if save_button.isOver(pos):
                     print("Save button clicked")
                 if start_button.isOver(pos):
