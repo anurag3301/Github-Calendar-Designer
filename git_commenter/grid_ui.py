@@ -112,10 +112,6 @@ def grid_screen_init(year):
         pygame.display.flip()
 
     pygame.quit()
-
-    with open(f'{year}.pkl', 'wb') as f:
-        pickle.dump(grid, f)
-
     return []
 
 def get_dates(year):
