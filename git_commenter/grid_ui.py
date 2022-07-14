@@ -70,13 +70,15 @@ def grid_screen_init(year):
                 pos = pygame.mouse.get_pos()
 
                 if old_button.isOver(pos):
-                    print("Old button clicked")
                     grid = grid_creator(year, old=True)
 
                 if save_button.isOver(pos):
-                    print("Save button clicked")
+                    with open(f'{year}.pkl', 'wb') as f:
+                        pickle.dump(grid, f)
+                    exit()
+
                 if start_button.isOver(pos):
-                    print("Start button clicked")
+                    return grid
 
                 if pos[0]<(MARGIN + WIDTH) * 53 and pos[1]<(MARGIN + HEIGHT) * 7:
                     column = pos[0] // (WIDTH + MARGIN)
@@ -114,10 +116,13 @@ def grid_screen_init(year):
     with open(f'{year}.pkl', 'wb') as f:
         pickle.dump(grid, f)
 
-    return grid
+    return []
 
 def get_dates(year):
     grid = grid_screen_init(year)
+
+    if len(grid) == 0:
+        exit()
 
     fday = datetime.datetime(year, 1, 1).weekday()
     fday = -1 if fday == 6 else fday
