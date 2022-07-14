@@ -3,6 +3,7 @@ import datetime
 import pickle
 from dateutil.relativedelta import relativedelta
 import sys
+import utils
  
 WINDOW_SIZE = [1400, 255]
 BLACK = (0, 0, 0)
@@ -14,6 +15,8 @@ HEIGHT = 20
 ROWS = 7
 COLS = 53
 MARGIN = 5
+BTN_BG = (40, 40, 40)
+BTN_FG = (200, 200, 200)
 
 pygame.init()
 
@@ -52,20 +55,32 @@ def grid_screen_init(year):
     else:
         grid = grid_creator(year)
 
+    old_button = utils.button(BTN_BG, BTN_FG, 400, 195, 70, 40, ' Old ')
+    save_button = utils.button(BTN_BG, BTN_FG, 570, 195, 220, 40, ' Save And Exit ')
+    start_button = utils.button(BTN_BG, BTN_FG, 900, 195, 100, 40, ' Start ')
 
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
-                print(pos)
+
+                if old_button.isOver(pos):
+                    print("Old button clicked")
+                if save_button.isOver(pos):
+                    print("Save button clicked")
+                if start_button.isOver(pos):
+                    print("Start button clicked")
+
                 if pos[0]<(MARGIN + WIDTH) * 53 and pos[1]<(MARGIN + HEIGHT) * 7:
                     column = pos[0] // (WIDTH + MARGIN)
                     row = pos[1] // (HEIGHT + MARGIN)
                     if(grid[column][row]!=None):
                         grid[column][row] = not grid[column][row]
      
+
         screen.fill(BLACK)
      
         for row in range(COLS):
@@ -81,6 +96,10 @@ def grid_screen_init(year):
                                   (MARGIN + HEIGHT) * column + MARGIN,
                                   WIDTH,
                                   HEIGHT])
+
+        old_button.draw(screen)
+        save_button.draw(screen)
+        start_button.draw(screen)
      
         clock.tick(60)
      
