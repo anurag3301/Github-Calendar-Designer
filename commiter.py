@@ -36,7 +36,7 @@ def commit(date):
     else:
         print("Staged!" + str(date))
 
-    git_commit = subprocess.run([f'git commit --author="{USERNAME} <{USEREMAIL}>" -m "{message}"'],
+    git_commit = subprocess.run([f'git commit --author="{USERFULLNAME} <{USEREMAIL}>" -m "{message}"'],
           stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, text=True)
 
     if git_commit.stderr:

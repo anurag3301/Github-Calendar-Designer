@@ -4,7 +4,7 @@ import random
 
 YEAR = 2019
 REPO_DIR = '/home/anurag/repo/test'
-USERNAME = '0xpar'
+USERFULLNAME = 'Anurag Kumar Singh'
 USEREMAIL = 'anurag3301.0x0@gmail.com'
 UPPER_LIMIT = 5
 LOWER_LIMIT = 2
